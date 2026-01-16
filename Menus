@@ -1,0 +1,69 @@
+JMenuBar menuBar = new JMenuBar();
+menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.PAGE_AXIS));
+menuBar.add(createMenu("Menu 1"));
+menuBar.add(createMenu("Menu 2"));
+menuBar.add(createMenu("Menu 3"));
+menuBar.setBorder(BorderFactory.createMatteBorder(0,0,0,1,
+Color.BLACK));
+JMenu m = new HorizontalMenu(title);
+m.add("Menu item #1 in " + title);
+m.add("Menu item #2 in " + title);
+m.add("Menu item #3 in " + title);
+JMenu submenu = new HorizontalMenu("Submenu");
+submenu.add("Submenu item #1");
+submenu.add("Submenu item #2");
+m.add(submenu)
+public void actionPerformed(ActionEvent e) {
+JMenuItem source = (JMenuItem)(e.getSource());
+String s = "Action event detected."
++ newline
++ " Event source: " + source.getText()
++ " (an instance of " + getClassName(source) + ")";
+output.append(s + newline);
+output.setCaretPosition(output.getDocument().getLength());
+}
+public void itemStateChanged(ItemEvent e) {
+JMenuItem source = (JMenuItem)(e.getSource());
+String s = "Item event detected."
++ newline
++ " Event source: " + source.getText()
++ " (an instance of " + getClassName(source) + ")"
++ newline
++ " New state: "
++ ((e.getStateChange() == ItemEvent.SELECTED) ?
+"selected":"unselected");
+output.append(s + newline);
+output.setCaretPosition(output.getDocument().getLength());
+}
+public void createPopupMenu() {
+JMenuItem menuItem;
+//Create the popup menu.
+JPopupMenu popup = new JPopupMenu();
+menuItem = new JMenuItem("A popup menu item");
+menuItem.addActionListener(this);
+popup.add(menuItem);
+menuItem = new JMenuItem("Another popup menu item");
+menuItem.addActionListener(this);
+popup.add(menuItem);
+//Add listener to the text area so the popup menu can come up.
+MouseListener popupListener = new PopupListener(popup);
+output.addMouseListener(popupListener);
+}
+class PopupListener extends MouseAdapter {
+JPopupMenu popup;
+PopupListener(JPopupMenu popupMenu) {
+popup = popupMenu;
+}
+public void mousePressed(MouseEvent e) {
+maybeShowPopup(e);
+}
+public void mouseReleased(MouseEvent e) {
+maybeShowPopup(e);
+}
+private void maybeShowPopup(MouseEvent e) {
+if (e.isPopupTrigger()) {
+popup.show(e.getComponent(),
+e.getX(), e.getY());
+}
+}
+}
