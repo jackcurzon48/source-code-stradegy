@@ -1,0 +1,146 @@
+/*
+   Name of the Program: firstGuiPgm
+   Version of the Program: 0.1
+   Author of the Program: [Mohamad wis]
+   Target of the Program: Mr. Di 'Tomasso'
+   Purpose:
+       This program creates a basic Java Swing GUI.
+       It displays a window with two buttons ("Send text!" and "Fancy Button"),
+       two text fields, and a label. When either button is clicked,
+       the label updates to show which button was pressed.
+       It demonstrates handling button events, using text fields,
+       and setting up a simple layout with Swing components.
+*/
+package task2Package;
+
+
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+class RadioButtonTest extends JFrame {
+    // Original variables
+    private final JTextField t;
+    private final Font plainFont;
+    private final Font boldFont;
+    private final Font italicFont;
+    private final Font boldItalicFont;
+    private final JRadioButton plain;
+    private final JRadioButton bold;
+    private final JRadioButton italic;
+    private final JRadioButton boldItalic;
+
+    //  Added from firstGui
+    private final JLabel statusLabel;
+    private final JTextField readOnlyTextField;
+    private final JButton sendTextButton;
+    private final JButton fancyButton;
+
+    public RadioButtonTest() {
+        super("RadioButton Test");
+
+        Container c = getContentPane();
+        c.setLayout(new FlowLayout());
+
+        // Original text field
+        t = new JTextField("Watch the font style change", 25);
+        c.add(t);
+
+        //  Added components from firstGui
+        statusLabel = new JLabel("Select a Button");
+        c.add(statusLabel);
+
+        sendTextButton = new JButton("Send Text");
+        sendTextButton.setIcon(resizeImageIcon("Images/istockphoto-1017196448-612x612.jpg", 50, 50));
+        fancyButton = new JButton("Fancy Button");
+        fancyButton.setIcon(resizeImageIcon("Images/Cristiano_Ronaldo_2018.jpg", 50, 50));
+
+        // Add event handling for new buttons
+        sendTextButton.addActionListener(e -> statusLabel.setText("You picked the Send Text button!"));
+        fancyButton.addActionListener(e -> statusLabel.setText("You picked the Fancy Button!"));
+
+        c.add(sendTextButton);
+        c.add(fancyButton);
+
+        readOnlyTextField = new JTextField("Uneditable text field", 15);
+        readOnlyTextField.setEditable(false);
+        c.add(readOnlyTextField);
+
+        // Original radio buttons
+        plain = new JRadioButton("Plain", true);
+        c.add(plain);
+        bold = new JRadioButton("Bold", false);
+        c.add(bold);
+        italic = new JRadioButton("Italic", false);
+        c.add(italic);
+        boldItalic = new JRadioButton("Bold/Italic", false);
+        c.add(boldItalic);
+
+        // Register events for radio buttons
+        RadioButtonHandler handler = new RadioButtonHandler();
+        plain.addItemListener(handler);
+        bold.addItemListener(handler);
+        italic.addItemListener(handler);
+        boldItalic.addItemListener(handler);
+
+        // Group radio buttons
+        ButtonGroup radioGroup;
+        radioGroup = new ButtonGroup();
+        radioGroup.add(plain);
+        radioGroup.add(bold);
+        radioGroup.add(italic);
+        radioGroup.add(boldItalic);
+
+        // Font setup
+        plainFont = new Font("TimesRoman", Font.PLAIN, 14);
+        boldFont = new Font("TimesRoman", Font.BOLD, 14);
+        italicFont = new Font("TimesRoman", Font.ITALIC, 14);
+        boldItalicFont = new Font("TimesRoman", Font.BOLD + Font.ITALIC, 14);
+        t.setFont(plainFont);
+
+        setSize(450, 250);
+        setVisible(true);
+    }
+
+    //  Added image resizing method from firstGui
+    private ImageIcon resizeImageIcon(String path, int width, int height) {
+        ImageIcon originalIcon = new ImageIcon(path);
+        Image image = originalIcon.getImage();
+        Image resizedImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
+    }
+
+    public static void main(String[] args) {
+        RadioButtonTest app = new RadioButtonTest();
+
+        app.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    private class RadioButtonHandler implements ItemListener {
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getSource() == plain)
+                t.setFont(plainFont);
+            else if (e.getSource() == bold)
+                t.setFont(boldFont);
+            else if (e.getSource() == italic)
+                t.setFont(italicFont);
+            else if (e.getSource() == boldItalic)
+                t.setFont(boldItalicFont);
+
+            t.repaint();
+        }
+    }
+}
